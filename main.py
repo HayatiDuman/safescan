@@ -44,8 +44,6 @@ async def run_scan(request: ScanRequest):
     
     # 2. Seçilen testleri asenkron olarak çalıştırma
     results = []
-    
-    # GÜNCELLEME: Gerçek bir tarayıcı gibi davranıyoruz ve süreyi uzatıyoruz
     browser_headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
@@ -54,7 +52,6 @@ async def run_scan(request: ScanRequest):
         tasks = []
         for key in selected_keys:
             if key in SCANNER_MAP:
-                # Timeout değerini artık client üzerinden global 15 saniye olarak kullanıyoruz
                 tasks.append(SCANNER_MAP[key](url, client))
         
         if tasks:
@@ -64,7 +61,6 @@ async def run_scan(request: ScanRequest):
     clean_results = []
     for i, res in enumerate(results):
         if isinstance(res, Exception):
-            # Eğer ana asenkron döngüde bir çökme olursa ismini yakala
             error_msg = f"{type(res).__name__}: {str(res)}" if str(res) else type(res).__name__
             clean_results.append({"scanner": selected_keys[i], "status": "Çöktü", "severity": "Info", "detail": error_msg})
         else:
