@@ -1,0 +1,9 @@
+# Python sanal ortamı
+venv/
+
+# Derlenmiş dosyalar
+__pycache__/
+*.pyc
+
+# Yapay Zeka Modelleri (Çok büyük oldukları için GitHub'a atılmazlar)
+models/*.gguf

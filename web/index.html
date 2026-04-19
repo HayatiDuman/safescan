@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>SafeScan AI</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #e2e8f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background-color: #1e293b; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; max-width: 500px; border: 1px solid #334155; }
+        h1 { color: #34d399; margin-top: 0; text-align: center; }
+        label { display: block; margin-bottom: 0.5rem; color: #94a3b8; font-size: 0.9rem; }
+        input, textarea { width: 100%; padding: 0.75rem; margin-bottom: 1.5rem; background-color: #0f172a; border: 1px solid #334155; color: white; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 0.75rem; background-color: #059669; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        button:hover { background-color: #047857; }
+        #result { margin-top: 1.5rem; padding: 1rem; background-color: #000; border: 1px dashed #34d399; border-radius: 6px; display: none; font-family: monospace; white-space: pre-wrap; font-size: 0.85rem;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SafeScan AI</h1>
+    
+    <label for="targetUrl">Hedef URL:</label>
+    <input type="url" id="targetUrl" placeholder="http://example.com" required>
+
+    <label for="aiPrompt">AI Komutu (İsteğe Bağlı):</label>
+    <textarea id="aiPrompt" rows="3" placeholder="Örn: XSS ve SQLi taraması yap..."></textarea>
+
+    <button onclick="startScan()">Taramayı Başlat</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    async function startScan() {
+        const target = document.getElementById('targetUrl').value;
+        const prompt = document.getElementById('aiPrompt').value;
+        const resultDiv = document.getElementById('result');
+        const btn = document.querySelector('button');
+
+        if(!target) { alert("Lütfen bir URL girin!"); return; }
+
+        btn.innerText = "Taranıyor...";
+        btn.disabled = true;
+        resultDiv.style.display = "block";
+        resultDiv.innerText = "İstek sunucuya gönderiliyor...";
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ target: target, prompt: prompt })
+            });
+            
+            const data = await response.json();
+            resultDiv.innerText = JSON.stringify(data, null, 2);
+        } catch (error) {
+            resultDiv.innerText = "HATA: Sunucuya ulaşılamadı. Python çalışıyor mu?";
+        } finally {
+            btn.innerText = "Taramayı Başlat";
+            btn.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>
