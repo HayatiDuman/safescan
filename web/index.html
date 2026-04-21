@@ -70,7 +70,7 @@
 
 <div class="container">
     <div class="header">
-        <h1>🛡️ SafeScan AI</h1>
+        <h1>SafeScan AI</h1>
         <p>Prompt-Driven Vulnerability Scanner</p>
     </div>
     
@@ -96,7 +96,7 @@
             <div class="summary-item"><span>Seçilen Testler</span><strong id="sum-scanners">-</strong></div>
         </div>
         
-        <button class="btn-copy" id="copyBtn" onclick="copyResults()">📋 Raporu Panoya Kopyala</button>
+        <button class="btn-copy" id="copyBtn" onclick="copyResults()">Raporu Panoya Kopyala</button>
 
         <div id="findings-list">
             </div>
@@ -184,12 +184,12 @@
     function copyResults() {
         if (!lastScanData) return;
 
-        let report = `🛡️ SAFESCAN AI - TARAMA RAPORU\n`;
+        let report = `SAFESCAN AI - TARAMA RAPORU\n`;
         report += `=====================================\n`;
-        report += `🎯 HEDEF URL  : ${lastScanData.target}\n`;
-        report += `🤖 AI KOMUTU  : ${lastPromptUsed || 'Tam Tarama (Boş)'}\n`;
-        report += `⏱️ SÜRE       : ${lastScanData.duration_seconds} Saniye\n`;
-        report += `🔍 TESTLER    : ${lastScanData.ai_detected_scanners.join(', ').toUpperCase()}\n`;
+        report += `HEDEF URL  : ${lastScanData.target}\n`;
+        report += `AI KOMUTU  : ${lastPromptUsed || 'Tam Tarama (Boş)'}\n`;
+        report += `SÜRE       : ${lastScanData.duration_seconds} Saniye\n`;
+        report += `TESTLER    : ${lastScanData.ai_detected_scanners.join(', ').toUpperCase()}\n`;
         report += `=====================================\n\n`;
 
         if (lastScanData.findings && lastScanData.findings.length > 0) {
@@ -207,7 +207,7 @@
         navigator.clipboard.writeText(report).then(() => {
             const copyBtn = document.getElementById('copyBtn');
             const originalHtml = copyBtn.innerHTML;
-            copyBtn.innerHTML = "✅ Rapor Kopyalandı!";
+            copyBtn.innerHTML = "Rapor Kopyalandı!";
             copyBtn.style.background = "var(--safe)";
             
             setTimeout(() => { 
