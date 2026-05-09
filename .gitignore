@@ -1,9 +1,37 @@
-# Python sanal ortamı
+# =========================
+# 1. Python ve Sanal Ortam
+# =========================
 venv/
-
-# Derlenmiş dosyalar
+env/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-# Yapay Zeka Modelleri (Çok büyük oldukları için GitHub'a atılmazlar)
+# =========================
+# 2. Yapay Zeka Modelleri
+# =========================
+# Modeller çok büyük olduğu için GitHub'a atılmazlar
 models/*.gguf
+models/*.bin
+
+# =========================
+# 3. Çevresel Değişkenler (Güvenlik)
+# =========================
+# İleride API key veya secret eklerseniz ifşa olmasın
+.env
+.env.local
+
+# =========================
+# 4. IDE ve Editör Ayarları
+# =========================
+# Ekip üyelerinin kişisel editör ayarları çakışmasın
+.vscode/
+.idea/
+*.swp
+
+# =========================
+# 5. İşletim Sistemi Çöp Dosyaları
+# =========================
+.DS_Store
+Thumbs.db

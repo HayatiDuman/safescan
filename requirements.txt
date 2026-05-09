@@ -1,5 +1,12 @@
+# Web Sunucusu ve API Framework
 fastapi
-uvicorn
+uvicorn[standard]
+
+# Asenkron HTTP İstekleri (Tarama Modülleri İçin)
 httpx
+
+# Veri Doğrulama
 pydantic
+
+# Local LLM Entegrasyonu
 llama-cpp-python

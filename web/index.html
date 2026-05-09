@@ -1,223 +1,367 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeScan AI - Dashboard</title>
+    <title>Dashboard</title>
+
     <style>
         :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #10b981;
-            --accent-hover: #059669;
-            --border: #334155;
-            
+            --bg: #0b1220;
+            --panel: rgba(30, 41, 59, 0.65);
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --accent: #22c55e;
+            --accent-hover: #16a34a;
+            --border: rgba(148, 163, 184, 0.15);
+
             --critical: #ef4444;
             --high: #f97316;
             --medium: #eab308;
             --low: #3b82f6;
             --info: #64748b;
-            --safe: #10b981;
+            --safe: #22c55e;
         }
 
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 2rem; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 900px; }
-        
-        .header { text-align: center; margin-bottom: 2rem; }
-        .header h1 { color: var(--accent); margin: 0; font-size: 2.5rem; letter-spacing: -1px; }
-        .header p { color: var(--text-muted); margin-top: 0.5rem; }
+        * {
+            box-sizing: border-box;
+        }
 
-        .control-panel { background: var(--panel-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); margin-bottom: 2rem; }
-        .input-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 600;}
-        input, textarea { width: 100%; padding: 0.75rem; background: var(--bg-color); border: 1px solid var(--border); color: white; border-radius: 6px; box-sizing: border-box; font-family: monospace; }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent); }
-        
-        button { width: 100%; padding: 1rem; background: var(--accent); color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;}
-        button:hover { background: var(--accent-hover); }
-        button:disabled { opacity: 0.7; cursor: not-allowed; }
+        body {
+            margin: 0;
+            padding: 40px 16px;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI;
+            background: radial-gradient(circle at top, #111827, #0b1220);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+        }
 
-        .btn-copy { background: var(--low); margin-bottom: 1rem; padding: 0.7rem; font-size: 0.9rem; }
-        .btn-copy:hover { background: #2563eb; }
+        .container {
+            width: 100%;
+            max-width: 920px;
+        }
 
-        /* Sonuç Bölümü Stilleri */
-        #results-container { display: none; }
-        .summary-card { background: var(--panel-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; display: flex; justify-content: space-between; }
-        .summary-item span { display: block; color: var(--text-muted); font-size: 0.8rem; }
-        .summary-item strong { font-size: 1.2rem; color: var(--accent); }
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
 
-        .finding-card { background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; overflow: hidden; }
-        .finding-header { padding: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); }
-        .finding-title { font-weight: bold; font-size: 1.1rem; }
-        .finding-body { padding: 1rem; color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; }
-        
-        /* Rozetler */
-        .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
-        .badge.critical { background: rgba(239, 68, 68, 0.2); color: var(--critical); border: 1px solid var(--critical); }
-        .badge.high { background: rgba(249, 115, 22, 0.2); color: var(--high); border: 1px solid var(--high); }
-        .badge.medium { background: rgba(234, 179, 8, 0.2); color: var(--medium); border: 1px solid var(--medium); }
-        .badge.low { background: rgba(59, 130, 246, 0.2); color: var(--low); border: 1px solid var(--low); }
-        .badge.info { background: rgba(100, 116, 139, 0.2); color: var(--text-muted); border: 1px solid var(--text-muted); }
-        .badge.safe { background: rgba(16, 185, 129, 0.2); color: var(--safe); border: 1px solid var(--safe); }
+        .header h1 {
+            font-size: 2.6rem;
+            margin: 0;
+            letter-spacing: -1px;
+            color: var(--accent);
+        }
 
-        .loader { border: 3px solid var(--border); border-top: 3px solid var(--accent); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .header p {
+            margin: 6px 0 0;
+            color: var(--muted);
+        }
+
+        /* PANEL */
+        .panel {
+            background: var(--panel);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text);
+            outline: none;
+            font-family: monospace;
+            transition: 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            color: #fff;
+            background: var(--accent);
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-copy {
+            margin-bottom: 12px;
+            background: var(--low);
+        }
+
+        .btn-copy:hover {
+            background: #2563eb;
+        }
+
+        /* SUMMARY */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .summary-box {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .summary-box span {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .summary-box strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        /* FINDINGS */
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .card-title {
+            font-weight: 700;
+        }
+
+        .card-body {
+            padding: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* BADGES */
+        .badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .critical { background: rgba(239,68,68,0.15); color: var(--critical); }
+        .high { background: rgba(249,115,22,0.15); color: var(--high); }
+        .medium { background: rgba(234,179,8,0.15); color: var(--medium); }
+        .low { background: rgba(59,130,246,0.15); color: var(--low); }
+        .info { color: var(--muted); }
+        .safe { background: rgba(34,197,94,0.15); color: var(--safe); }
+
+        /* LOADER */
+        .loader {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
+
 <body>
 
 <div class="container">
+
     <div class="header">
-        <h1>SafeScan AI</h1>
-        <p>Prompt-Driven Vulnerability Scanner</p>
+        <h1>AI-powered vulnerability scanner</h1>
     </div>
-    
-    <div class="control-panel">
-        <div class="input-group">
-            <label for="targetUrl">HEDEF URL</label>
-            <input type="url" id="targetUrl" value="http://testphp.vulnweb.com/" required>
-        </div>
-        <div class="input-group">
-            <label for="aiPrompt">YAPAY ZEKA KOMUTU</label>
-            <textarea id="aiPrompt" rows="2" placeholder="Örn: Sitenin header ve çerezlerini kontrol et..."></textarea>
-        </div>
-        <button id="scanBtn" onclick="startScan()">
+
+    <div class="panel">
+
+        <label>Target URL</label>
+        <input id="targetUrl" value="http://localhost:3000">
+
+        <label style="margin-top:12px;">AI Prompt</label>
+        <textarea id="aiPrompt" rows="2" placeholder="e.g. Check headers and cookies..."></textarea>
+
+        <button class="btn" id="scanBtn" onclick="startScan()">
             <div class="loader" id="spinner"></div>
-            <span id="btnText">Taramayı Başlat</span>
+            <span id="btnText">Start Scan</span>
         </button>
+
     </div>
 
-    <div id="results-container">
-        <div class="summary-card">
-            <div class="summary-item"><span>Hedef</span><strong id="sum-target">-</strong></div>
-            <div class="summary-item"><span>Süre</span><strong id="sum-time">-</strong></div>
-            <div class="summary-item"><span>Seçilen Testler</span><strong id="sum-scanners">-</strong></div>
-        </div>
-        
-        <button class="btn-copy" id="copyBtn" onclick="copyResults()">Raporu Panoya Kopyala</button>
+    <div id="results-container" style="display:none;">
 
-        <div id="findings-list">
+        <div class="summary">
+            <div class="summary-box">
+                <span>Target</span>
+                <strong id="sum-target">-</strong>
             </div>
+
+            <div class="summary-box">
+                <span>Duration</span>
+                <strong id="sum-time">-</strong>
+            </div>
+
+            <div class="summary-box">
+                <span>Scanners</span>
+                <strong id="sum-scanners">-</strong>
+            </div>
+        </div>
+
+        <button class="btn btn-copy" id="copyBtn" onclick="copyResults()">
+            Copy Report
+        </button>
+
+        <div id="findings-list"></div>
+
     </div>
+
 </div>
 
 <script>
-    // Kopyalama işlemi için son tarama verilerini global olarak tutuyoruz
-    let lastScanData = null;
-    let lastPromptUsed = "";
+let lastScanData = null;
+let lastPromptUsed = "";
 
-    function getBadgeClass(severity, status) {
-        if(status === "Güvenli") return "safe";
-        if(status === "Hata" || status === "Çöktü") return "info";
-        const s = severity.toLowerCase();
-        if(['critical', 'high', 'medium', 'low'].includes(s)) return s;
-        return "info";
-    }
+function badge(sev, status) {
+    if(status === "Güvenli") return "safe";
+    return sev?.toLowerCase() || "info";
+}
 
-    async function startScan() {
-        const target = document.getElementById('targetUrl').value;
-        const prompt = document.getElementById('aiPrompt').value;
-        const btn = document.getElementById('scanBtn');
-        const btnText = document.getElementById('btnText');
-        const spinner = document.getElementById('spinner');
-        const resultsContainer = document.getElementById('results-container');
-        const findingsList = document.getElementById('findings-list');
+async function startScan() {
+    const target = document.getElementById("targetUrl").value;
+    const prompt = document.getElementById("aiPrompt").value;
 
-        if(!target) return alert("Lütfen bir URL girin!");
+    const btn = document.getElementById("scanBtn");
+    const spinner = document.getElementById("spinner");
+    const text = document.getElementById("btnText");
 
-        lastPromptUsed = prompt; // Prompt'u kopyalama için kaydet
-        btn.disabled = true;
-        btnText.innerText = "Yapay Zeka Analiz Ediyor & Taranıyor...";
-        spinner.style.display = "block";
-        resultsContainer.style.display = "none";
-        findingsList.innerHTML = "";
+    if(!target) return alert("Enter URL!");
 
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/scan', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ target, prompt })
-            });
-            
-            const data = await response.json();
-            lastScanData = data; // Tüm JSON verisini kaydet
-            
-            document.getElementById('sum-target').innerText = data.target;
-            document.getElementById('sum-time').innerText = data.duration_seconds + " sn";
-            document.getElementById('sum-scanners').innerText = data.ai_detected_scanners.join(", ").toUpperCase();
+    lastPromptUsed = prompt;
 
-            if(data.findings && data.findings.length > 0) {
-                data.findings.forEach(item => {
-                    const badgeClass = getBadgeClass(item.severity, item.status);
-                    const card = document.createElement('div');
-                    card.className = 'finding-card';
-                    card.innerHTML = `
-                        <div class="finding-header">
-                            <span class="finding-title">${item.scanner}</span>
-                            <span class="badge ${badgeClass}">${item.status === 'Güvenli' ? 'SAFE' : item.severity}</span>
-                        </div>
-                        <div class="finding-body">
-                            <strong>Durum:</strong> ${item.status} <br><br>
-                            <strong>Detay:</strong> ${item.detail || "Detay bulunamadı."}
-                        </div>
-                    `;
-                    findingsList.appendChild(card);
-                });
-            } else {
-                findingsList.innerHTML = "<p style='color: var(--text-muted); text-align: center;'>Herhangi bir bulgu üretilmedi.</p>";
-            }
+    btn.disabled = true;
+    spinner.style.display = "block";
+    text.innerText = "Scanning...";
 
-            resultsContainer.style.display = "block";
+    document.getElementById("results-container").style.display = "none";
+    document.getElementById("findings-list").innerHTML = "";
 
-        } catch (error) {
-            alert("Sunucuya ulaşılamadı. Python (FastAPI) arka planda çalışıyor mu?");
-        } finally {
-            btn.disabled = false;
-            btnText.innerText = "Taramayı Başlat";
-            spinner.style.display = "none";
-        }
-    }
+    try {
+        const res = await fetch("http://127.0.0.1:8000/api/scan", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({target, prompt})
+        });
 
-    // YENİ EKLENEN KOPYALAMA FONKSİYONU
-    function copyResults() {
-        if (!lastScanData) return;
+        const data = await res.json();
+        lastScanData = data;
 
-        let report = `SAFESCAN AI - TARAMA RAPORU\n`;
-        report += `=====================================\n`;
-        report += `HEDEF URL  : ${lastScanData.target}\n`;
-        report += `AI KOMUTU  : ${lastPromptUsed || 'Tam Tarama (Boş)'}\n`;
-        report += `SÜRE       : ${lastScanData.duration_seconds} Saniye\n`;
-        report += `TESTLER    : ${lastScanData.ai_detected_scanners.join(', ').toUpperCase()}\n`;
-        report += `=====================================\n\n`;
+        document.getElementById("sum-target").innerText = data.target;
+        document.getElementById("sum-time").innerText = data.duration_seconds + "s";
+        document.getElementById("sum-scanners").innerText = data.ai_detected_scanners.join(", ");
 
-        if (lastScanData.findings && lastScanData.findings.length > 0) {
-            lastScanData.findings.forEach(f => {
-                report += `[${f.scanner.toUpperCase()}]\n`;
-                report += `Durum  : ${f.status} (${f.severity})\n`;
-                report += `Detay  : ${f.detail}\n`;
-                report += `-------------------------------------\n`;
+        const list = document.getElementById("findings-list");
+
+        if(data.findings?.length) {
+            data.findings.forEach(f => {
+
+                const div = document.createElement("div");
+                div.className = "card";
+
+                const cls = badge(f.severity, f.status);
+
+                div.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-title">${f.scanner}</div>
+                        <div class="badge ${cls}">${f.status}</div>
+                    </div>
+                    <div class="card-body">
+                        <b>Detail:</b> ${f.detail || "-"}
+                    </div>
+                `;
+
+                list.appendChild(div);
             });
         } else {
-            report += `Bulgu üretilemedi.\n`;
+            list.innerHTML = "<p style='color:#94a3b8;text-align:center'>No findings</p>";
         }
 
-        // Metni panoya kopyala ve butona görsel geri bildirim ver
-        navigator.clipboard.writeText(report).then(() => {
-            const copyBtn = document.getElementById('copyBtn');
-            const originalHtml = copyBtn.innerHTML;
-            copyBtn.innerHTML = "Rapor Kopyalandı!";
-            copyBtn.style.background = "var(--safe)";
-            
-            setTimeout(() => { 
-                copyBtn.innerHTML = originalHtml; 
-                copyBtn.style.background = "var(--low)";
-            }, 2000);
-        }).catch(err => {
-            alert("Kopyalama başarısız: " + err);
-        });
+        document.getElementById("results-container").style.display = "block";
+
+    } catch(e) {
+        alert("Backend not running!");
+    } finally {
+        btn.disabled = false;
+        spinner.style.display = "none";
+        text.innerText = "Start Scan";
     }
+}
+
+function copyResults() {
+    if(!lastScanData) return;
+
+    let txt = `SAFE SCAN REPORT\n\n`;
+    txt += `Target: ${lastScanData.target}\n`;
+    txt += `Prompt: ${lastPromptUsed}\n\n`;
+
+    lastScanData.findings.forEach(f => {
+        txt += `[${f.scanner}]\n${f.status}\n${f.detail}\n\n`;
+    });
+
+    navigator.clipboard.writeText(txt).then(() => {
+        alert("Copied!");
+    });
+}
 </script>
 
 </body>
