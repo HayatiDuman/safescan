@@ -40,7 +40,7 @@ async def run_scan(request: ScanRequest):
         url = "http://" + url
 
     # 1. AI Yönlendirmesi
-    selected_keys = get_scanners_from_prompt(request.prompt)
+    selected_keys = await get_scanners_from_prompt(request.prompt)
     
     # 2. Seçilen testleri asenkron olarak çalıştırma
     results = []
